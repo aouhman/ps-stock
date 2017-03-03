@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'ronin';
-	src:url("fonts/ronin.eot");
-	src:url("fonts/ronin.eot") format('embedded-opentype'),
-	url("fonts/ronin.woff") format('woff'),
-	url("fonts/ronin.ttf") format('truetype'),
-	url("fonts/ronin.svg") format('svg');
+	src:url("#{resource['fonts/ronin.eot']}");
+	src:url("#{resource['fonts/ronin.eot']}") format('embedded-opentype'),
+	url("#{resource['fonts/ronin.woff']}") format('woff'),
+	url("#{resource['fonts/ronin.ttf']}") format('truetype'),
+	url("#{resource['fonts/ronin.svg']}") format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
