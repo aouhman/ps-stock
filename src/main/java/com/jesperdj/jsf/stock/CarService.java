@@ -1,14 +1,12 @@
 package com.jesperdj.jsf.stock;
- 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.faces.bean.ApplicationScoped;
-
 import javax.faces.bean.ManagedBean;
-
 import com.jesperdj.jsf.stock.Car;
+ 
 @ManagedBean(name = "carService")
 @ApplicationScoped
 public class CarService {

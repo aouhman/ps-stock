@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3c.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
 
@@ -10,7 +11,6 @@
 
 
     <h:outputStylesheet library="fa" name="font-awesome.css"/>
-    <h:outputStylesheet name="theme.css"/>
     <h:outputStylesheet name="components.css"/>
 
     <h:outputScript library="jquery" name="jquery.js"/>
@@ -208,53 +208,170 @@
                             <div class="Container100">
                                 <div class="ContainerIndent">
                                     <div class="ShadowBox whiteback">
-<h:form id="form">
-    <p:dataGrid var="car" value="#{dataGridView.cars}" columns="3" layout="grid"
-        rows="12" paginator="true" id="cars"
-        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-        rowsPerPageTemplate="6,12,16">
+                                <h:form id="form">
+                                
+                                <h:form>
+    <p:dataTable id="tbl" var="car" value="#{dataExporterView.cars}"
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px">
  
-        <f:facet name="header">
-            Cars for Sale
+        <f:facet name="{Exporters}">
+            <h:commandLink>
+                <p:graphicImage name="images/excel.png" width="24"/>
+                <p:dataExporter type="xls" target="tbl" fileName="cars" />
+            </h:commandLink>
+ 
+            <h:commandLink>
+                <p:graphicImage name="images/pdf.png" width="24"/>
+                <p:dataExporter type="pdf" target="tbl" fileName="cars"/>
+            </h:commandLink>
+ 
+            <h:commandLink>
+                <p:graphicImage name="images/csv.png" width="24"/>
+                <p:dataExporter type="csv" target="tbl" fileName="cars" />
+            </h:commandLink>
+ 
+            <h:commandLink>
+                <p:graphicImage name="images/xml.png" width="24"/>
+                <p:dataExporter type="xml" target="tbl" fileName="cars" />
+            </h:commandLink>
         </f:facet>
  
-        <p:panel header="#{car.id}" style="text-align:center">
-            <h:panelGrid columns="1" style="width:100%">
-                <p:graphicImage name="demo/images/car/#{car.brand}.gif"/> 
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Id" />
+            </f:facet>
+            <h:outputText value="#{car.id}" />
+        </p:column>
  
-                <h:outputText value="#{car.year}" />
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Year"/>
+            </f:facet>
+            <h:outputText value="#{car.year}" />
+        </p:column>
  
-                <p:commandLink update=":form:carDetail" oncomplete="PF('carDialog').show()" title="View Detail">
-                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
-                    <f:setPropertyActionListener value="#{car}" target="#{dataGridView.selectedCar}" />
-                </p:commandLink>
-            </h:panelGrid>
-        </p:panel>
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Brand" />
+            </f:facet>
+            <h:outputText value="#{car.brand}" />
+        </p:column>
  
-    </p:dataGrid>
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Color" />
+            </f:facet>
+            <h:outputText value="#{car.color}" />
+        </p:column>
+    </p:dataTable>
  
-    <p:dialog header="Car Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-        <p:outputPanel id="carDetail" style="text-align:center;">
-            <p:panelGrid  columns="2" rendered="#{not empty dataGridView.selectedCar}" columnClasses="label,value">
-                <f:facet name="header">
-                    <p:graphicImage name="demo/images/car/#{dataGridView.selectedCar.brand}-big.gif"/> 
-                </f:facet>
+    <h3>Export Page Data Only</h3>
+    <h:commandLink>
+        <p:graphicImage name="images/excel.png" />
+        <p:dataExporter type="xls" target="tbl" fileName="cars" pageOnly="true"/>
+    </h:commandLink>
  
-                <h:outputText value="Id:" />
-                <h:outputText value="#{dataGridView.selectedCar.id}" />
+    <h:commandLink>
+        <p:graphicImage name="images/pdf.png" />
+        <p:dataExporter type="pdf" target="tbl" fileName="cars" pageOnly="true" />
+    </h:commandLink>
  
-                <h:outputText value="Year" />
-                <h:outputText value="#{dataGridView.selectedCar.year}" />
+    <h:commandLink>
+        <p:graphicImage name="images/csv.png" />
+        <p:dataExporter type="csv" target="tbl" fileName="cars" pageOnly="true" />
+    </h:commandLink>
  
-                <h:outputText value="Color:" />
-                <h:outputText value="#{dataGridView.selectedCar.color}" style="color:#{dataGridView.selectedCar.color}"/>
- 
-                <h:outputText value="Price" />
-                <h:outputText value="$#{dataGridView.selectedCar.price}" />
-            </p:panelGrid>
-        </p:outputPanel>
-    </p:dialog>
+    <h:commandLink>
+        <p:graphicImage name="images/xml.png" />
+        <p:dataExporter type="xml" target="tbl" fileName="cars" pageOnly="true" />
+    </h:commandLink>
 </h:form>
+                                
+    <p:growl id="msgs" showDetail="true" />
+ 
+    <p:dataTable var="car" value="#{dtReorderView.cars1}" draggableColumns="true" style="margin-bottom:20px">
+        <f:facet name="header">
+            Draggable Columns
+        </f:facet>
+        <p:column headerText="Id">
+            <h:outputText value="#{car.id}" />
+        </p:column>
+ 
+        <p:column headerText="Year">
+            <h:outputText value="#{car.year}" />
+        </p:column>
+ 
+        <p:column headerText="Brand">
+            <h:outputText value="#{car.brand}" />
+        </p:column>
+ 
+        <p:column headerText="Color">
+            <h:outputText value="#{car.color}" />
+        </p:column>
+    </p:dataTable>
+ 
+    <p:dataTable var="car" value="#{dtReorderView.cars2}" draggableRows="true">
+        <p:ajax event="rowReorder" listener="#{dtReorderView.onRowReorder}" update=":form:msgs" />
+        <f:facet name="header">
+            Draggable Rows
+        </f:facet>
+        <p:column headerText="Id">
+            <h:outputText value="#{car.id}" />
+        </p:column>
+ 
+        <p:column headerText="Year">
+            <h:outputText value="#{car.year}" />
+        </p:column>
+ 
+        <p:column headerText="Brand">
+            <h:outputText value="#{car.brand}" />
+        </p:column>
+ 
+        <p:column headerText="Color">
+            <h:outputText value="#{car.color}" />
+        </p:column>
+    </p:dataTable>
+	<p:chart type="bar" model="#{chartView.barModel}" style="height:300px"/>
+	 
+	<p:chart type="bar" model="#{chartView.horizontalBarModel}" style="height:300px"/>
+
+
+</h:form>
+
+
+<p:dataTable id="cars" var="car" value="#{dtBasicView.cars}">
+    <f:facet name="header">
+        List of Cars
+ 
+        <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+        <p:columnToggler datasource="cars" trigger="toggler" />
+    </f:facet>
+ 
+    <p:column headerText="Id">
+        <h:outputText value="#{car.id}" />
+    </p:column>
+ 
+    <p:column headerText="Year">
+        <h:outputText value="#{car.year}" />
+    </p:column>
+ 
+    <p:column headerText="Brand">
+        <h:outputText value="#{car.brand}" />
+    </p:column>
+ 
+    <p:column headerText="Color">
+        <h:outputText value="#{car.color}" />
+    </p:column>
+ 
+    <p:column headerText="Price">
+        <h:outputText value="#{car.price}">
+            <f:convertNumber type="currency" currencySymbol="$" />
+        </h:outputText>
+    </p:column>
+</p:dataTable>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -265,7 +382,7 @@
                                     <div class="ShadowBox whiteback NavyBlueBorderedBox">
                                         <div class="Container100" style="" id="footerlinks">
                                             <a href="#"
-                                               class="DispInlBlock FontSourceSansLight blue Fs12 Fleft HoverEffect">TERMS OF CONDITIONS</a>
+                                               class="DispInlBlock FontSourceSansLight blue Fs12 Fleft HoverEffect">TERMS OF CONDITIONS abdessamad</a>
                                             <span class="Fleft navyblue Fs12" style="padding:0px 5px;">|</span>
                                             <a href="#"
                                                class="DispInlBlock FontSourceSansLight blue Fs12 Fleft HoverEffect">SITEMAP</a>
